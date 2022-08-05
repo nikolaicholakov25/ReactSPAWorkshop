@@ -1,7 +1,35 @@
+import * as gameService from '../services/gamesServices'
+import { useNavigate } from 'react-router-dom'
+
 export const CreateGame = () => {
+  let navigate = useNavigate()
+
+  const onCreateGame = (e) => {
+    e.preventDefault()
+
+    let form = new FormData(document.getElementById('create'))
+    let [title,category,maxLevel,imageUrl,summary] = form.values()
+
+    let game = {
+      title,
+      category,
+      maxLevel,
+      imageUrl,
+      summary
+    }
+
+    if(title && category && maxLevel && imageUrl && summary !== ''){
+      console.log('y');
+      gameService.createGame(game)
+      .then(r => navigate('/'))
+    }
+
+  }
+
+
     return (
         <section id="create-page" className="auth">
-    <form id="create">
+    <form onSubmit={onCreateGame} id="create">
       <div className="container">
         <h1>Create Game</h1>
         <label htmlFor="leg-title">Legendary title:</label>

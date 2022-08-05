@@ -20,7 +20,7 @@ export const Catalogue = () => {
 
     {  games.length > 0 ? 
     games.map(x => 
-    <div className="allGames">
+    <div key={x._id} className="allGames">
         <div className="allGames-info">
             <img src={x.imageUrl} alt='' />
             <h6>{x.category}</h6>

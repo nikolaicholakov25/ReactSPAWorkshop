@@ -2,11 +2,6 @@ import {Details} from '../pages/Details'
 import {Link} from 'react-router-dom'
 
 export const Game = (props) => {
-
-    const showDetails = () => {
-        
-    }
-
     return (
         <>
         <div className="game">
