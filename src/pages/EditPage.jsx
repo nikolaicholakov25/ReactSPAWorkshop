@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import {useParams} from 'react-router-dom'
+import {useParams, useNavigate} from 'react-router-dom'
 import * as gameService from '../services/gamesServices'
 
 export const EditPage = (props) => {
+  let navigate = useNavigate()
+
 
     let [details , setDetails] = useState({})
 
@@ -26,11 +28,8 @@ export const EditPage = (props) => {
             summary: data.get('summary'),
         }
 
-
-        console.log(newGame);
-
         gameService.editGame(gameId , newGame)
-        .then(res => console.log(res))
+        .then(res => navigate(`/details/${gameId}`))
 
     }
 

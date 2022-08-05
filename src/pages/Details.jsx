@@ -41,8 +41,15 @@ export const Details = (props) => {
     let form = new FormData(document.getElementById('form1'))
     let [comment] = form.values()
 
+    if(comment === ''){
+      alert('please fill the comment section')
+      return 
+    }
+
     gameService.addComment(gameId,comment)
     .then(r => setAddedComment(x => !x))
+
+    document.getElementById('commentInput').value = ''
   }
 
 
@@ -96,7 +103,7 @@ export const Details = (props) => {
 
 
       {user !== null
-      ? userId !== gameId 
+      ? userId !== game._ownerId
       ?
     <article className="create-comment">
       <label>Add new comment:</label>
@@ -104,6 +111,7 @@ export const Details = (props) => {
       id='form1'
       className="form">
         <textarea
+          id='commentInput'
           name="comment"
           placeholder="Comment......"
           defaultValue={""}
