@@ -6,9 +6,7 @@ import { SessionContext } from '../contexts/SessionContext'
 
 export const Details = (props) => {
   let navigate = useNavigate()
-
   let {user} = useContext(SessionContext)
-
   let userId
 
   if(user !== null){
@@ -16,15 +14,16 @@ export const Details = (props) => {
   }
   
   let {gameId} = useParams()
-  
-  const getAllComments = () => {
-    gameService.getComments(gameId)
-    .then(r => console.log(r))
-  } 
 
   let [game , setGame] = useState({})
-  let [comments,SetComments] = useState(getAllComments())
+  let [addedComment, setAddedComment] = useState(false)
+  let [comments,SetComments] = useState([])
   
+  useEffect(() => {
+    gameService.getComments(gameId)
+    .then(res => SetComments(res))
+  },[game , addedComment])
+
   
   useEffect(() => {
     gameService.getGame(gameId)
@@ -35,6 +34,15 @@ export const Details = (props) => {
   const deleteGame = () => {
     gameService.deleteGame(gameId)
     .then(r => navigate('/'))
+  }
+
+  const addNewComment = (e) => {
+    e.preventDefault()
+    let form = new FormData(document.getElementById('form1'))
+    let [comment] = form.values()
+
+    gameService.addComment(gameId,comment)
+    .then(r => setAddedComment(x => !x))
   }
 
 
@@ -56,18 +64,15 @@ export const Details = (props) => {
       <div className="details-comments">
         <h2>Comments:</h2>
         <ul>
-          {/* list all comments for current game (If any) */}
-          <li className="comment">
-            <p>Content: I rate this one quite highly.</p>
-          </li>
-          <li className="comment">
-            <p>Content: The best game.</p>
-          </li>
+          {comments.length === 0
+          ? <p className="no-comment">No comments.</p>
+          :
+          comments.map(x => <li key={x._id} className="comment"><p>{x.comment}</p></li>)
+        }
         </ul>
 
-        {/* Display paragraph: If there are no comments in the database */}
 
-        <p className="no-comment">No comments.</p>
+        {/* Display paragraph: If there are no comments in the database */}
       </div>
 
       {/* Edit/Delete buttons ( Only for creator of this game )  */}
@@ -95,7 +100,9 @@ export const Details = (props) => {
       ?
     <article className="create-comment">
       <label>Add new comment:</label>
-      <form className="form">
+      <form onSubmit={addNewComment}  
+      id='form1'
+      className="form">
         <textarea
           name="comment"
           placeholder="Comment......"
@@ -111,6 +118,7 @@ export const Details = (props) => {
       : null
       : null
       }
+
 
   </section>
     )

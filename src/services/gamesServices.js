@@ -70,3 +70,22 @@ export const getComments = (gameId) => {
     return fetch(`${url}${suffix}`)
     .then(res => res.json())
 }
+
+export const addComment = (gameId,comment) => {
+    let suffix = `data/comments`
+
+    let acc = showSession().accessToken
+
+    return fetch(`${url}${suffix}` , {
+        method: 'post',
+        headers: {
+            'content-type' : 'application/json',
+            "X-Authorization": acc
+        },
+        body: JSON.stringify({
+            gameId,
+            comment
+        })
+    })
+    .then(res => res.json())
+}
